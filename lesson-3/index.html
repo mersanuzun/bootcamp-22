@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bootcamp</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <style>
+      .todos {
+          margin-bottom: 10px;
+          margin-top: 10px;
+      }
+    .todo {
+        border: 1px solid gray;
+        margin-bottom: 10px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .remove {
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div>
+    <input v-model="todo"/>
+    <button @click="onClick">Add</button>
+    <div v-show="todos.length === 0">
+      <span>No Todo Found</span>
+    </div>
+    <div v-if="todos.length === 1">
+      <span>You should add at least 2 todo items</span>
+    </div>
+    <div class="todos" v-else>
+      <div
+          class="todo"
+          v-for="(todoItem, idx) in todos"
+          :key="`${todoItem.id}`"
+      >
+        {{ todoItem.name }} - {{ idx }}
+        <input v-model="todoItem.name"/>
+
+        <div class="remove" @click="removeTodoItem(idx)">X</div>
+      </div>
+    </div>
+    <hr />
+    <div v-for="(value, key) in object">
+      {{ key }} : {{ value }}
+    </div>
+  </div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+
+  data() {
+    return {
+      todo: '',
+      todos: [],
+      object: { lesson: 'lesson - 1' }
+    }
+  },
+
+  methods: {
+    onClick() {
+      this.todos.push({ name: this.todo, id: new Date().getTime() });
+    },
+    removeTodoItem(idx) {
+      this.todos.splice(idx, 1);
+      console.log('remove', idx);
+    }
+  }
+})
+</script>
+
+</body>
+</html>
