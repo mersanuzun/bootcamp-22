@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bootcamp</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <style>
+      .health-bar {
+          height: 20px;
+          border: 1px solid #FAF5E4;
+      }
+      .health-bar-value {
+          width: 100%;
+          height: 100%;
+          background-color: #125B50;
+      }
+      .gamer {
+          border: 2px solid #F8B400;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 20px;
+      }
+      .gamer span {
+          font-weight: bold;
+      }
+
+      .btn {
+          border: none;
+          padding: 10px 20px;
+          width: 100%;
+          cursor: pointer;
+          color: white;
+          margin-bottom: 10px;
+          border-radius: 50px;
+      }
+      .btn:hover {
+          font-weight: bold;
+      }
+      .attack-btn {
+          background-color: #145DA0;
+      }
+      .heal-btn {
+          background-color: green;
+      }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="gamer">
+  <span>
+    Monster ({{ monsterHeal }})
+  </span>
+    <div class="health-bar">
+      <div class="health-bar-value" :style="{ width: monsterHealPerc }"></div>
+    </div>
+  </div>
+  <div class="gamer">
+  <span>
+    Player ({{ playerHeal }})
+  </span>
+    <div class="health-bar">
+      <div class="health-bar-value" :style="{ width: playerHealPerc }"></div>
+    </div>
+  </div>
+  <div class="operations">
+    <button
+        class="btn attack-btn"
+        @click="onAttack"
+        :disabled="canAttack"
+    >
+      ATTACK
+    </button>
+    <button
+        class="btn heal-btn"
+        @click="onHealToPlayer"
+        :disabled="!canHeal"
+    >
+      HEAL
+    </button>
+  </div>
+  <div class="winner-wrapper">
+    <span v-if="isWon">
+      You won!!!
+    </span>
+    <span v-else-if="!!winner">
+      You lost!!!
+    </span>
+  </div>
+</div>
+
+<script>
+  function getRandomInt(min, max) {
+    return Math.ceil(Math.random() * (max - min) + min);
+  }
+
+new Vue({
+  el: '#app',
+
+  data() {
+    return {
+      monsterHeal: 100,
+      playerHeal: 100,
+      healCount: 3,
+      winner: '',
+    }
+  },
+
+  computed: {
+    monsterHealPerc() {
+      return `${this.monsterHeal}%`
+    },
+    playerHealPerc() {
+      return `${this.playerHeal}%`
+    },
+    canHeal() {
+      return this.healCount > 0;
+    },
+    isWon() {
+      return this.winner === 'player';
+    },
+    canAttack() {
+      return !!this.winner;
+    }
+  },
+
+  methods: {
+    onAttack() {
+      const attackPower = getRandomInt(5, 10);
+
+      this.monsterHeal -= attackPower;
+    },
+    attackToPlayer() {
+      const attackPower = getRandomInt(5, 10);
+
+      this.playerHeal -= attackPower;
+    },
+
+    onHealToPlayer() {
+      const heal = this.playerHeal + 10;
+
+      if (heal <= 100) {
+        this.playerHeal += 10;
+
+        this.healCount -= 1;
+      }
+    }
+  },
+
+  watch: {
+    monsterHeal(newMonsterHeal) {
+      this.attackToPlayer();
+
+      if (newMonsterHeal <= 0) {
+        this.monsterHeal = 0;
+
+        this.winner = 'player'
+      }
+    },
+    playerHeal(newPlayerHeal) {
+      if (newPlayerHeal <= 0) {
+        this.playerHeal = 0
+
+        this.winner = 'monster'
+      }
+    },
+  }
+})
+</script>
+
+</body>
+</html>
