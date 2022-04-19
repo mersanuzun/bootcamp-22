@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bootcamp</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  {{ message }}
+  <hr>
+  <a>{{link}}</a>
+  <a
+      v-bind:href="link"
+      v-bind:style="{ 'background-color': backgroundColor }"
+  >
+    click me!!
+  </a>
+  <hr />
+  {{ evenOrOdd(1) }} <br>
+  {{ evenOrOdd(2) }}
+  <hr>
+  <button v-on:click="onDecrease(1)">-</button>
+  {{ counter }}
+  <button v-on:click="onIncrease(1)">+</button>
+  <hr>
+  <input
+      v-on:keydown.enter="onKeydown"
+      v-model="firstname"
+  />
+  <input
+      v-on:keydown.enter="onKeydown"
+      v-model="lastname"
+  />
+  <br>
+  Computed: {{ fullnameV2 }} <br>
+  Watch: {{ fullnameWithWatch }}
+  <hr>
+  {{ evenOrOddValue }}
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data() {
+    return {
+      message: 'hello',
+      link: 'www.trendyol.com',
+      backgroundColor: 'red',
+      number: 1,
+      counter: 0,
+      firstname: '',
+      lastname: '',
+      fullnameWithWatch: ''
+    }
+  },
+  methods: {
+    evenOrOdd(number) {
+      if (number % 2 === 0) {
+        return 'even';
+      } else {
+        return 'odd';
+      }
+    },
+    onDecrease(value) {
+      this.counter = this.counter - value;
+    },
+    onIncrease(value) {
+      this.counter = this.counter + value;
+    },
+    onInput (event) {
+      this.firstname = event.target.value
+    },
+    onKeydown (event) {
+      // console.log(event);
+      this.firstname = ''
+    },
+    getUserInfo() {
+      // Get user info from API...
+      console.log('user info is fetching...')
+    }
+  },
+  computed: {
+    fullname() {
+      // console.log('computed runned');
+      return `${this.firstname} ${this.lastname}`
+    },
+    fullnameV2() {
+      // console.log('computed v2 runned');
+      return `${this.fullname} V2`
+    },
+    evenOrOddValue() {
+      return this.counter % 2 === 0 ? 'Even' : 'Odd';
+    }
+  },
+  watch: {
+    firstname(value) {
+      this.fullnameWithWatch = `${value} ${this.lastname}`;
+
+      this.getUserInfo();
+    },
+    lastname(value) {
+      this.fullnameWithWatch = `${this.firstname} ${value}`
+    }
+  }
+})
+</script>
+
+</body>
+</html>
